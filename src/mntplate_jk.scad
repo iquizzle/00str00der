@@ -4,7 +4,7 @@
 // license:  Creative Commons Commercial 3.0 share-alike w/attribution
 
 use <MCAD/nuts_and_bolts.scad>
-use <00str00der.scad>
+//use <00str00der.scad>
 //use <../[path_to_xcarriage]/jonaskueling_x-carriage/jonaskuehling_x-carriage_lm8uu.scad>
 
 plate_thickness = 4 + 3;
