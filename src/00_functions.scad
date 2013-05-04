@@ -1,10 +1,11 @@
 use <MCAD/motors.scad>
 use <MCAD/nuts_and_bolts.scad>
 
-module fillet(rad,height) {
-	difference() {
-		translate([0,0,-height/2]) cube([rad-0.05,rad-0.05,height]);
-cylinder(h=height+1,r=rad,center=true);
+module fillet(rad,height){
+	translate([-rad,-rad,0])
+	difference(){
+		translate([0,0,-height/2]) cube([rad+0.01,rad+0.01,height]);
+		cylinder(h=height+1,r=rad,center=true);
 	}
 }
 
@@ -31,9 +32,9 @@ module large_pulley_w_hob() {
 
 module hotend_w_screws() {
 	union() {
-		translate([0,0,-35]) cylinder(r=5/16*25.4+0.25 + 0.8,h=35);
-		translate([0,6+3/2-0.25,-4.76-3/2-0.75]) rotate([0,-90,0]) cylinder(r=3/2 + 0.3,h=50,center=true);
-		translate([0,-6-3/2+0.25,-4.76-3/2-0.75]) rotate([0,-90,0]) cylinder(r=3/2 + 0.3,h=50,center=true);
+		translate([0,0,-35]) cylinder(r=5/16*25.4+0.25,h=35);
+		translate([0,6+3/2-0.25,-4.76-3/2-0.75]) rotate([0,-90,0]) cylinder(r=3/2+0.05,h=50,center=true);
+		translate([0,-6-3/2+0.25,-4.76-3/2-0.75]) rotate([0,-90,0]) cylinder(r=3/2+0.05,h=50,center=true);
 	}
 }
 
@@ -60,11 +61,14 @@ module stepper_w_pulley2() {
 	}
 }
 
-module 608_bearing(tolerance=0.1) {
-	difference() {
-		union() {
+module 608_bearing(tolerance=0.1,center_ring=1){
+	difference(){
+		union(){
 			color("FireBrick",1) cylinder(r=22/2+tolerance,h=7,center=true);
-			color("FireBrick",1) cylinder(r=13.5/2,h=9,center=true);
+
+			if (center_ring == 1){
+				color("FireBrick",1) cylinder(r=13.5/2,h=9,center=true);
+			}
 		}
 		cylinder(r=8/2,h=9+0.1,center=true);
 	}

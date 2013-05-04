@@ -12,8 +12,12 @@ bowden = 0;
 pushfit_dia = 0.339*25.4;
 pushfit_h = 0.25*25.4;
 
-filament_hole = 2.25;
-filament_slot = 1;
+// uncomment for 1.75mm filament
+//filament_hole = 2.25;
+//filament_slot = 1;
+// uncomment for 3.5mm filament
+filament_hole = 3.5;
+filament_slot = 1.25;
 
 // TODO move to a config SCAD, see other TODOs
 /////// Global Parameters Calculation ////////
@@ -68,17 +72,14 @@ module 00str00der() {
 				// Position the extruder block
 				translate([-9,block_offset,0]) rotate([0,0,180]) extruder_block();
 				// Add mounts for hinge
-				translate([-8,9+block_offset,11/2-42.3/2-5.5]) cube([12.5,26,8],center=true);
-				translate([-8,17+block_offset,-17]) rotate([0,90,0]) cylinder(r=10/2,h=12.5,center=true);
-				translate([-14.20,11+block_offset,11/2-42.3/2-5.5]) rotate([0,0,-90]) fillet(2,8);
-				translate([-1.825,11+block_offset,11/2-42.3/2-5.5]) rotate([0,0,180]) fillet(2,8);
+				translate([-8,8+block_offset,11/2-42.3/2-5.5]) cube([12.5,26,8],center=true);
+				translate([-8,16+block_offset,-17]) rotate([0,90,0]) cylinder(r=10/2,h=12.5,center=true);
+				translate([-14.20,10+block_offset,11/2-42.3/2-5.5]) rotate([0,0,-90]) fillet(2,8);
+				translate([-1.825,10+block_offset,11/2-42.3/2-5.5]) rotate([0,0,180]) fillet(2,8);
 			}
-			/// Make a hole for the filament 3.5mm wide w/ a little slot room
+			/// Make a hole for the filament w/ a little slot room
 			for (i = [0:0.25:filament_slot]) {
 				translate([-8,block_offset+6.75-i-filament_slot/2,0]) color("Blue",1) cylinder(r=filament_hole/2,h=100,center=true);
-			}
-			for (i = [0:0.25:1.25]) {
-				translate([-8,block_offset+6.75-i,0]) color("Blue",1) cylinder(r=3.5/2,h=100,center=true);
 			}
 
 			if (bowden == 0) {
@@ -94,7 +95,7 @@ module 00str00der() {
 			}
 
 			// Make a hole for the hinge mount
-			translate([0,block_offset+17,-16.5]) rotate([0,90,0]) cylinder(r=3/2+0.2,h=100,center=true);
+			translate([0,block_offset+16,-16.5]) rotate([0,90,0]) cylinder(r=3/2+0.2,h=100,center=true);
 		}
 
 		//Add a solid layer for better prints -- will have to cut hole after
@@ -103,7 +104,6 @@ module 00str00der() {
 		} else {
 			translate([-8,block_offset+6.75-filament_slot,-32.2+pushfit_h-0.05]) cylinder(r=(5/16*25.4)+0.25,h=0.25);
 		}
-		translate([-8,block_offset+6.75,-20.75]) cylinder(r=(5/16*25.4)+0.25,h=0.25);
 	}
 }
 
@@ -113,7 +113,7 @@ module extruder_block() {
 		minkowski() {
 
 			// Main block
-			translate([0,0,-4]) cube([20,18,44.3],center=true);
+			translate([0,1,-4]) cube([20,16,44.3],center=true);
 
 			// Contour edges with minkowski
 			translate([-1,0,0]) rotate([0,90,0]) cylinder(r=2,h=4,center=true);
@@ -126,6 +126,10 @@ module extruder_block() {
 		translate([-9, 3, 10+16]) rotate([0, 0, 90]) rotate([0, 90, 0]) nutSlot(10, 0.1, size=4);
 		translate([7, 3, 10+16]) rotate([0, 0, 90]) rotate([0, 90, 0]) nutSlot(10, 0.1, size=4);
 
+		//remove thin wall
+		translate([-13.1,3,10+4.35]) cube([3,3.3,6]);
+		translate([8.1,3,10+4.35]) cube([3,3.3,6]);
+
 		// Clear the hobbed bolt
 		//% translate([12,-2,0]) rotate([0,90,0]) large_pulley_w_hob();
 		translate([12 - 0.01, -2, 0]) rotate([0,90,0]) cylinder(r = 8 / 2 + 0.2, h=50, center=true);
@@ -135,8 +139,8 @@ module extruder_block() {
 		translate([-13,-2,0]) rotate([0,90,0]) 608_bearing();
 
 		// Cut a slot for the 608 bearing that presses on the filament
-		translate([-1 - 0.5, -16, 0]) rotate([0,90,0]) 608_bearing();
-		translate([-1 + 0.5, -16, 0]) rotate([0,90,0]) 608_bearing();
+		translate([-2,-15,0]) rotate([0,90,0]) 608_bearing(center_ring=0);
+		translate([0,-15,0]) rotate([0,90,0]) 608_bearing(center_ring=0);
 
 		/// Make a hole for the filament
 		//for (i = [0:0.25:0.75]){
@@ -153,12 +157,12 @@ module extruder_block() {
 }
 
 // TODO parametrize this module, 00str00der depends on it
-module extruder_base() {
-	difference() {
-		minkowski() {
-			difference() {
-				translate([-11+6,-15.5+block_offset/2,11/2-42.3/2-7]) cube([24,71+block_offset,15],center=true);
-				translate([-8,21+block_offset,-19.5]) cube([100,24,10],center=true);
+module extruder_base(){
+	difference(){
+		minkowski(){
+			difference(){
+				translate([-11+6,-16+block_offset/2,11/2-42.3/2-7]) cube([24,70+block_offset,15],center=true);
+				translate([-8,19+block_offset,-19.5]) cube([100,22,10],center=true);
 			}
 			translate([-5+4,0,0]) rotate([0,90,0]) cylinder(r=2,h=4,center=true);
 		}
@@ -171,9 +175,8 @@ module extruder_base() {
 		translate([-8, -43, -10.5]) rotate([0,180,0]) cylinder(r = 3.5, h = 35,center=true);
 
 		// Add a slotted motor mount
-		for (i = [-2:0.5:1.5]) {
-		translate([0,-52+42.3/2+i,-5]) rotate([0,90,0]) stepper_w_pulley2();
+		for (i = [-3:0.5:1.5]){
+			translate([0,-52+42.3/2+i,-5]) rotate([0,90,0]) stepper_w_pulley2();
 		}
 	}
 }
-
