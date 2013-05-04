@@ -15,17 +15,17 @@ pushfit_h = 0.25*25.4;
 // uncomment for 1.75mm filament
 //filament_hole = 2.25;
 //filament_slot = 1;
-// uncomment for 3.5mm filament
+// uncomment for 3mm filament
 filament_hole = 3.5;
 filament_slot = 1.25;
 
 // TODO move to a config SCAD, see other TODOs
 /////// Global Parameters Calculation ////////
 /// Enter pulley diameters HERE
-//bigP = 37.69;    // large pulley diameter
-//smallP = 22.4;  // small pulley diameter
+//bigP = 37.69;    // large pulley diameter 60T plastic
+//smallP = 22.4;  // small pulley diameter 36T plastic
 bigP = 40.9;    // large pulley diameter - 65T plastic
-//bigP = 38.96;    // large pulley diameter - 62 alum
+//bigP = 38.96;    // large pulley diameter - 62T alum
 smallP = 10.2;  // small pulley diameter - 16T plastic
 //smallP = 10.8;  // small pulley diameter - 16T alum
 belt_len = 88 * 2;  // for gt2 pulleys #of teeth x 2mm pitch
@@ -102,7 +102,7 @@ module 00str00der() {
 		if (bowden == 0) {
 			translate([-8,block_offset+6.75-filament_slot,-20.75]) cylinder(r=(5/16*25.4)+0.25,h=0.25);
 		} else {
-			translate([-8,block_offset+6.75-filament_slot,-32.2+pushfit_h-0.05]) cylinder(r=(5/16*25.4)+0.25,h=0.25);
+			translate([-8,block_offset+6.75-filament_slot,-32.2+pushfit_h-0.05]) cylinder(r=pushfit_dia/2+0.25,h=0.25);
 		}
 	}
 }
@@ -166,14 +166,15 @@ module extruder_base(){
 			}
 			translate([-5+4,0,0]) rotate([0,90,0]) cylinder(r=2,h=4,center=true);
 		}
-		// mount screws
-		translate([1, -4.5, -20]) rotate([0,180,0]) cylinder(r = 2.2, h = 35,center=true);
-		translate([-13, -4.5, -20]) rotate([0,180,0]) cylinder(r = 2.2, h = 35,center=true);
-		//translate([-8, -23, -20]) rotate([0,180,0]) cylinder(r = 2.2, h = 35,center=true);
-		translate([-8, -43, -20]) rotate([0,180,0]) cylinder(r = 2.2, h = 35,center=true);
-		//translate([-8, -23, -10.5]) rotate([0,180,0]) cylinder(r = 3.2, h = 35,center=true);
-		translate([-8, -43, -10.5]) rotate([0,180,0]) cylinder(r = 3.5, h = 35,center=true);
-
+		if(bowden==0){
+			// mount screws
+			translate([1, -4.5, -20]) rotate([0,180,0]) cylinder(r = 2.2, h = 35,center=true);
+			translate([-13, -4.5, -20]) rotate([0,180,0]) cylinder(r = 2.2, h = 35,center=true);
+			//translate([-8, -23, -20]) rotate([0,180,0]) cylinder(r = 2.2, h = 35,center=true);
+			translate([-8, -43, -20]) rotate([0,180,0]) cylinder(r = 2.2, h = 35,center=true);
+			//translate([-8, -23, -10.5]) rotate([0,180,0]) cylinder(r = 3.2, h = 35,center=true);
+			translate([-8, -43, -10.5]) rotate([0,180,0]) cylinder(r = 3.5, h = 35,center=true);
+		}
 		// Add a slotted motor mount
 		for (i = [-3:0.5:1.5]){
 			translate([0,-52+42.3/2+i,-5]) rotate([0,90,0]) stepper_w_pulley2();
